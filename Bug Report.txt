@@ -1,0 +1,30 @@
+//*************************************************************
+// Michael Meluso
+// CSC 345 - Operating Systems
+// Project 2 - Threaded Reservation System
+// 
+// Rug Report.txt
+// Lists the program's specs and
+// all parts of the program that do not work as expected. 
+//*************************************************************
+
+The program uses pthreads to process requests concurrently. Each thread opens a new terminal to enter data, which are
+all traced back to the main process. To support concurrency, a mutex lock exists to protect the mailbox from
+2 threads entering data simultaneously. Also, only one thread is allowed to read from input at a time. Fairness is implemented
+by checking 3 data structures, one for each prioirity. If I had more time to experiment with data structures in C I probably
+would've chosen something different, but as it is it is implemented with stacks. Priority is handled by checking the admin 
+priority queue first, and then the others. 
+
+For the implementation, I broke the program into two seperate processes: one that gathers input and does error checking for a single request, and one that
+handles all requests coming in and sends appropriate responses. Some parts of the program are simulated, including authentication of users and email
+confirmations/notifications of an override. 
+
+To test the program, I exhausted many out-of-bounds values which could occur in input to make the main process simpler. I spent a large amount of time
+making sure that the process was aware of the correct date and time, and took care to make sure calculations of valid times and months were accurate. I tested running multiple threads concurrently.
+
+There were a few bugs with the program. For example, if input could not be received in a certain amount of time, the program would proceed and run into a 
+segmentation fault when it tried to read null values. Also, there was a delay between when a thread was called and when it was executed. Some input was not formatted correctly. I did not check that the user was booking only during the hours the library was open. Because of that, the case also existed where a 
+user could book a room for some imaginary hours beyond midnight.  
+
+I had hoped to use pipes to pipe  input/output between the processes. However, I chose the option that was easier at the time to get some type of
+implementation working. I wrote and read from a text file. 
